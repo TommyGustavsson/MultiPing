@@ -18,7 +18,7 @@
         private readonly Dictionary<string, CustomPingReply> _customPingReplies = new Dictionary<string, CustomPingReply>();
         private readonly Timer _timer = new Timer();
         private readonly object _consoleLock = new object();
-        private const int Column = 20;
+        private const int Column = 12;
         private const int RowOffset = 5;
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
@@ -44,7 +44,12 @@
         {
             Console.Clear();
 
+            if (!CheckConsoleWidth()) {
+                Console.WriteLine("Console window width to small.");
+            }
+
             Console.WriteLine($"MultiPing running with Timeout: {timeout} Interval: {_timer.Interval}");
+            Console.WriteLine("Press ESC to quit.");
 
             CreateHeader();
 
@@ -62,6 +67,10 @@
 
             PingHosts();
             _timer.Enabled = true;
+        }
+
+        private bool CheckConsoleWidth() {
+            return Console.WindowWidth >= (Column*5);
         }
 
         private void UpdateConsole(CustomPingReply customPingReply)
